@@ -41,11 +41,11 @@ engine = create_engine(DATABASEURI)
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 #
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+#engine.execute("""CREATE TABLE IF NOT EXISTS test (
+#  id serial,
+#  name text
+#);""")
+#engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 
 
 @app.before_request
@@ -91,6 +91,7 @@ def teardown_request(exception):
 #
 @app.route('/')
 def index():
+	
   """
   request is a special object that Flask provides to access web request information:
 
@@ -100,7 +101,7 @@ def index():
 
   See its API: https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data
   """
-
+	
   # DEBUG: this is debugging code to see what request looks like
   print(request.args)
 
@@ -108,10 +109,9 @@ def index():
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT name FROM test")
-  names = []
+  cursor = g.conn.execute("SELECT hotel_id,name FROM hotel")
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    print("hotel id:", result[0], "hotel name:", result[1]);  # can also be accessed using result[0]
   cursor.close()
 
   #
