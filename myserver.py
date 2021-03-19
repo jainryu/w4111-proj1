@@ -51,18 +51,28 @@ def teardown_request(exception):
 
 
 
-@app.route('/', methods=['POST','GET'])
+@app.route('/')
 def index():
-	#requesting a form to enter a city name
-  cursor = g.conn.execute("SELECT name FROM hotel")
-  names = []
-  for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
-  cursor.close()
+  return render_template("index.html")
 
-  context = dict(data = names)
-			
-  return render_template("index.html", **context)
+@app.route('/hotelinfo', methods = ['POST'])
+def hotelinfo():
+    
+  if request.method == 'POST':
+    city = request.form["city"]
+    result = g.conn.execute("SELECT name FROM hotel WHERE hotel.city_name = %s",city)
+    data = []
+    for row in result:
+      data.append(row[0])
+    	
+    context = dict(data = data)
+    return render_template("hotelinfo.html", **context)
+
+@app.route('/login', methods = ['POST'])
+def login():
+  id = request.form["id"]
+  
+
 
 
 if __name__ == "__main__":
