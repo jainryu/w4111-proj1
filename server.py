@@ -111,8 +111,7 @@ def index():
   #
   cursor = g.conn.execute("SELECT hotel_id,name FROM hotel")
   for result in cursor:
-    print("hotel id:", result[0], "hotel name:", result[1]);  # can also be accessed using result[0]
-  cursor.close()
+    print("hotel id:", result[0], "hotel name:", result[1]);  # can also be accessed usin
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can

@@ -10,14 +10,19 @@
 <body>
   <h1>Search for Hotels!</h1>
 
-<p><a href="login">Use login page to register/find your past reservations!</a></p>
+<p><a href="register"> If you are not a member, register to book a hotel! </a></p>
+<p><a href="login"> Log in to view your past reservations and recommendations </a></p>
 
-<div> {{data}} </div}
+<form method="POST" action={{url_for('hotelinfo')}}>
+<p>Where are you travelling to? <br> <input type="text" name="city"> <input type="submit" value="Search"></p>
 
-<form method="POST" action="/">
-<p>Destination: <input type="text" name="city"> <input type="submit" value="Search"></p>
 </form>
 
+  <p> Options: <br> New York (NY) <br> Laguna Beach (CA) <br> Bryan (TX) <br>
+      San Luis Obispo (CA) <br> Dana Point (CA) <br> The Woodlands (TX) <br> Orlando (FL)
+      <br> Kissimmee (FL) <br> Las Vegas (NV) </p>
+
+  
 </body>
 
 

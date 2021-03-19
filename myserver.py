@@ -48,32 +48,60 @@ def teardown_request(exception):
     pass
 
 
-
-
-
 @app.route('/')
 def index():
+ 
   return render_template("index.html")
+
+
 
 @app.route('/hotelinfo', methods = ['POST'])
 def hotelinfo():
     
   if request.method == 'POST':
     city = request.form["city"]
-    result = g.conn.execute("SELECT name FROM hotel WHERE hotel.city_name = %s",city)
-    data = []
+    result = g.conn.execute("SELECT * FROM hotel WHERE city_name = %s",city)
+    tour = g.conn.execute("SELECT name, price FROM touristattraction WHERE city_name = %s",city)
+    data= []
+    data2 = []
+
     for row in result:
-      data.append(row[0])
-    	
+      data.append(row)
+    for row in tour:
+      print(row)
+      data2.append(row)
+
     context = dict(data = data)
-    return render_template("hotelinfo.html", **context)
+    context2 = dict(data2= data2)    
+    return render_template("hotelinfo.html", **context, **context2)
+
+
 
 @app.route('/login', methods = ['POST'])
 def login():
   id = request.form["id"]
+  result = g.conn.execute("SELECT name FROM customer WHERE cust_id = %s", id)
+  print("Your Past Reservations\n")
   
+ 
+
+    
+@app.route('/register')
+def register():
+  return render_template("register.html")
 
 
+
+@app.route('/add', methods=['POST'])
+def add():
+  id = request.form['id']
+  yob = request.form['year_of_birth']
+  name = request.form['name']
+  email = request.form['email']
+  gender = request.form['gender']
+  g.conn.execute('INSERT INTO customer VALUES (%s,%s,%s,%s,%s)',id,yob,name,email,gender)
+  print("welcome %s!",name)
+  return redirect('/')
 
 if __name__ == "__main__":
   import click
