@@ -1,32 +1,35 @@
-<html>
-  <style>
-    body{
-      font-size: 15pt;
-      font-family: arial;
-    }
-  </style>
+{% extends "index.html" %}
+
+  {% block page %} -Hotel Information {% endblock %}
+  {% block heading %} 
+	{{ super() }}
+  {% endblock %}
 
 
-<body>
-  <h1>Hotel Information</h1>
-<p><a href="another">Go to the other page</a></p>
-
-  <h3> Click buttons for more information </h3>
+{% block content %}
+  <h3> Click buttons to book</h3>
 <p>
   {% for n in data %}
-   <div> <button type = "button" onclick="{{n[0]}}">{{n[1]}}</div>
+   <div> <button type = "button"> {{n[1]}} </button> </divi>
+   <ul>
+     <li> number of rooms : {{n[2]}} </li>
+     <li> number of stars: {{n[3]}} </li>
+     <li> founded: {{n[5]}} </li>
+   </ul> 
   {% endfor %}
-
 </p>
 
-  <h4> Tourist Attraction in City </h4>
+  <h3> Tourist Attraction in City </h3>
 <p>
   {% for n in data2 %}
   <div> {{n[0]}} (price: {{n[1]}} ) <br>
   Transportation Option:  </div>
   {% endfor %}
 </p> 
-</body>
 
+{% endblock %}
 
-</html>
+{% block footer %}
+  {{ super() }}
+{% endblock %}}
+
