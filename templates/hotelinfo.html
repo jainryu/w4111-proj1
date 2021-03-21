@@ -7,15 +7,20 @@
 
 
 {% block content %}
-  <h3> Click buttons to book</h3>
+  <h3> Click Buttons to Book</h3>
 <p>
+  <div>
   {% for n in data %}
-   <div> <button type = "button"> {{n[1]}} </button> </divi>
+   {{n[1]}}
+   <form method = "POST" action={{url_for('book')}}> 
+   <input type="submit" name="hotel" value = "{{n[0]}}">
+   </form>
    <ul>
      <li> number of rooms : {{n[2]}} </li>
      <li> number of stars: {{n[3]}} </li>
      <li> founded: {{n[5]}} </li>
    </ul> 
+   </divi>
   {% endfor %}
 </p>
 
@@ -30,6 +35,5 @@
 {% endblock %}
 
 {% block footer %}
-  {{ super() }}
-{% endblock %}}
-
+  {{super()}}
+{% endblock %}

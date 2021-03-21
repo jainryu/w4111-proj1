@@ -33,9 +33,6 @@ def before_request():
     g.conn = None
 
 
-
-
-
 @app.teardown_request
 def teardown_request(exception):
   """
@@ -50,10 +47,7 @@ def teardown_request(exception):
 
 @app.route('/')
 def index():
- 
-  return render_template("index.html")
-
-
+   return render_template("index.html")
 
 @app.route('/hotelinfo', methods = ['POST'])
 def hotelinfo():
@@ -68,28 +62,36 @@ def hotelinfo():
     for row in result:
       data.append(row)
     for row in tour:
-      print(row)
       data2.append(row)
 
     context = dict(data = data)
     context2 = dict(data2= data2)    
     return render_template("hotelinfo.html", **context, **context2)
 
+@app.route('/book', methods = ['POST']) 
+def book():
+  if request.method == 'POST':
+     hotel = request.form["hotel"]
+     result = g.conn.execute("SELECT room_number, size, price_per_night FROM room WHERE hotel_id = %s",hotel)
+     data = []
+     for row in result:
+       data.append(row)
+     
+     context = dict(data = data)
+     return render_template("book.html", **context)
+ 
 
 
-@app.route('/login', methods = ['POST'])
+@app.route('/data', methods = ['POST'])
 def login():
   id = request.form["id"]
   result = g.conn.execute("SELECT name FROM customer WHERE cust_id = %s", id)
-  print("Your Past Reservations\n")
-  
- 
+  return render_template("data.html", result, ) 
 
     
 @app.route('/register')
 def register():
   return render_template("register.html")
-
 
 
 @app.route('/add', methods=['POST'])
@@ -100,8 +102,20 @@ def add():
   email = request.form['email']
   gender = request.form['gender']
   g.conn.execute('INSERT INTO customer VALUES (%s,%s,%s,%s,%s)',id,yob,name,email,gender)
-  print("welcome %s!",name)
-  return redirect('/')
+  return 'Welcome %s!' % name
+
+
+
+@app.route('/addbooking', methods=['POST'])
+def addbooking():
+  room = request.form['room']
+  yob = request.form['year_of_birth']
+  name = request.form['name']
+  email = request.form['email']
+  gender = request.form['gender']
+  
+  
+
 
 if __name__ == "__main__":
   import click
