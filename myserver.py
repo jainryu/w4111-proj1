@@ -9,12 +9,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 
 DATABASEURI = "postgresql://jr3990:293875@34.73.36.248/project1"
 
-
-
 engine = create_engine(DATABASEURI)
-
-
-
 
 @app.before_request
 def before_request():
@@ -50,8 +45,7 @@ def index():
    return render_template("index.html")
 
 @app.route('/hotelinfo', methods = ['POST'])
-def hotelinfo():
-    
+def hotelinfo():    
   if request.method == 'POST':
     city = request.form["city"]
     result = g.conn.execute("SELECT * FROM hotel WHERE city_name = %s",city)
@@ -86,12 +80,13 @@ def login():
  
 @app.route('/pastbooking', methods = ['POST'])
 def pastbooking():
-  if request.form== 'POST':
+  if request.method == 'POST':
     id = request.form["id"]
-    result = g.conn.execute("SELECT city_name, hotel.name, room_number, check_in_date, check_out_date FROM booking NATURAL JOIN room NATURAL JOIN hotel WHERE cust_id = %s", id)
+    result = g.conn.execute("SELECT city_name, hotel.name, room_number, check_in_date, check_out_date FROM (booking NATURAL JOIN room) JOIN hotel USING (hotel_id) WHERE cust_id = %s", id)
     data = []
     for row in result:
       data.append(row)
+
     context = dict(data = data)
     return render_template("pastbooking.html",**context) 
 
@@ -109,9 +104,7 @@ def add():
   email = request.form['email']
   gender = request.form['gender']
   g.conn.execute('INSERT INTO customer VALUES (%s,%s,%s,%s,%s)',id,yob,name,email,gender)
-  return 'Welcome %s!' % name
-
-
+  return render_template("login.html")
 
 @app.route('/addbooking', methods=['POST'])
 def addbooking():
