@@ -1,16 +1,22 @@
 {% extends "index.html" %}
 
+  {% block page %} -Login Page {% endblock %}
+  {% block heading %}
+    {{ super() }}
+  {% endblock %}
 
-<body>
-  <h1>Past Reservations</h1>
+{% block content %}
+  <form method = "POST" action={{url_for('pastbooking')}}>
+  <p> Enter your customer id: <br>
+      <input type = "text" name="id">
+      <input type = "submit" value = "search">
+  </p>
+  </form>
 
-<ul>
-  <li> <li>
-</ul>
+{% endblock %}
 
+{% block footer %}
+  {{ super() }}
+{% endblock %}
 
  
-</body>
-
-
-{% endblock %} 

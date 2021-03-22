@@ -79,14 +79,21 @@ def book():
      
      context = dict(data = data)
      return render_template("book.html", **context)
- 
 
-
-@app.route('/data', methods = ['POST'])
+@app.route('/login')
 def login():
-  id = request.form["id"]
-  result = g.conn.execute("SELECT name FROM customer WHERE cust_id = %s", id)
-  return render_template("data.html", result, ) 
+  return render_template("login.html")
+ 
+@app.route('/pastbooking', methods = ['POST'])
+def pastbooking():
+  if request.form== 'POST':
+    id = request.form["id"]
+    result = g.conn.execute("SELECT city_name, hotel.name, room_number, check_in_date, check_out_date FROM booking NATURAL JOIN room NATURAL JOIN hotel WHERE cust_id = %s", id)
+    data = []
+    for row in result:
+      data.append(row)
+    context = dict(data = data)
+    return render_template("pastbooking.html",**context) 
 
     
 @app.route('/register')
