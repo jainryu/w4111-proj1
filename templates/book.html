@@ -21,28 +21,28 @@
   </p>
 
   <h3> Enter Your Information </h3>
-  
+  <p>  
   <form method = "POST" action="/addbooking">
-  <p>
     room number: <input type = "text" name = "room"> <br>
     check-in date: <input type = "date" name = "check-in"> <br>
     check-out date: <input type = "date" name= "check-out"> <br>
     customer ID: <input type = "text" name = "id"> <br>
-  </p>
+    <input type = "submit" value = "Book">
   </form>
+  </p>
 
   <h5> Enter Travel Companion's Information (optional) </h5>
-  <form method = "POST" action="/addcompanion">
   <p>
+  <form method = "POST" action="/addcompanion">
     companion id(GUESTXXX): <input type = "text" name = "id"> <br>
     relationship : <input type = "text" name = "relation"> <br>
     year of birth: <input type = "text" name = "yob"> <br>
     name: <input type = "text" name ="name"> <br>
     gender(M/F): <input type = "text" name = "gender"> <br>
     customer_id : <input type = "text" name = "cust_id"> <br>
-  </p>
+    <input type = "submit" value = "Add Guest">
   </form>  
-
+  </p>
 {% endblock %}
 
 {% block footer %}

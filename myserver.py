@@ -109,13 +109,22 @@ def add():
 @app.route('/addbooking', methods=['POST'])
 def addbooking():
   room = request.form['room']
-  yob = request.form['year_of_birth']
-  name = request.form['name']
-  email = request.form['email']
-  gender = request.form['gender']
-  
-  
+  checkin = request.form['check-in']
+  checkout = request.form['check-out']
+  id = request.form['id']
+  g.conn.execute('INSERT INTO booking VALUES (%d,%d-%m-%Y,%d-%m-%Y,%s)',room,checkin,checkout,id)
+  return "Booking Complete"
 
+@app.route('/addcompanion', methods=['POST'])
+def addcompanion():
+  id = request.form['id']
+  relation = request.form['relation']
+  yob = request.form['yob']
+  name = request.form['name']
+  gender = request.form['gender']
+  cust_id = request.form['cust_id']
+  g.conn.execute('INSERT INTO travelcompanion VALUES (%d,%s,%d,%s,%s,%s)',id,relation,yob,name,gender,cust_id)
+  return "Added to Guest List"
 
 if __name__ == "__main__":
   import click

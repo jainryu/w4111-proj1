@@ -5,20 +5,26 @@
       font-family: arial;
     }
   </style>
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  </head>
 
 <body>
   {% block heading %}
     <h1> Search For Hotels{% block page %}{% endblock %}</h1>
   {% endblock %}
 
-  <p><a href="register"> Register </a></p>
-  <p><a href="login"> Login to View Your Booking History </a></p>
+  <p><a class="btn btn-outline-primary" href="register" role="button">Register</a></p>
+  <p><a class="btn btn-outline-primary" href="login" role="button">Log-in to View Your Booking History</a></p>
 
   {% block content %}
     <form method="POST" action={{url_for('hotelinfo')}}>
-      <p>Which city are you travelling to? <br> <input type="text" name="city"> <input type="submit" value="Search"></p>
-
-     </form>
+      <p>Which city are you travelling to? <br> <input type="text" name="city">
+      <div class = "form-group">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>      
+     </p>
+    </form>
     <p> Options: <br> New York (NY) <br> Laguna Beach (CA) <br> Bryan (TX) <br>
       San Luis Obispo (CA) <br> Dana Point (CA) <br> The Woodlands (TX) <br> Orlando (FL)
       <br> Kissimmee (FL) <br> Las Vegas (NV) </p>
