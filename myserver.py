@@ -50,29 +50,38 @@ def hotelinfo():
     city = request.form["city"]
     result = g.conn.execute("SELECT * FROM hotel WHERE city_name = %s",city)
     tour = g.conn.execute("SELECT name, price FROM touristattraction WHERE city_name = %s",city)
+    trans = g.conn.execute("SELECT K.destination, K.destprice, K.start,K.startprice, T.type,T.price FROM (SELECT A.id as destid, A.name as destination, A.price as destprice,B.id as startid,B.name as start,B.price as startprice FROM touristattraction A CROSS JOIN touristattraction B) K JOIN transportation T ON (T.to_ID=K.destid AND T.from_ID=K.startid)")  
     data= []
     data2 = []
+    data3 = []
 
     for row in result:
       data.append(row)
     for row in tour:
       data2.append(row)
+    for row in trans:
+      data3.append(row)
 
     context = dict(data = data)
-    context2 = dict(data2= data2)    
-    return render_template("hotelinfo.html", **context, **context2)
+    context2 = dict(data2= data2)
+    context3 = dict(data3= data3)    
+    return render_template("hotelinfo.html", **context, **context2,**context3)
 
 @app.route('/book', methods = ['POST']) 
 def book():
   if request.method == 'POST':
      hotel = request.form["hotel"]
      result = g.conn.execute("SELECT room_number, size, price_per_night FROM room WHERE hotel_id = %s",hotel)
+     booked = g.conn.execute("SELECT room_number, check_in_date,check_out_date FROM room NATURAL JOIN booking WHERE hotel_id = %s",hotel)
      data = []
+     data2 = []
      for row in result:
        data.append(row)
-     
+     for row in booked:
+       data2.append(row)
      context = dict(data = data)
-     return render_template("book.html", **context)
+     context2 = dict(data2=data2)
+     return render_template("book.html", **context,**context2)
 
 @app.route('/login')
 def login():
@@ -83,12 +92,16 @@ def pastbooking():
   if request.method == 'POST':
     id = request.form["id"]
     result = g.conn.execute("SELECT city_name, hotel.name, room_number, check_in_date, check_out_date FROM (booking NATURAL JOIN room) JOIN hotel USING (hotel_id) WHERE cust_id = %s", id)
+    rec = g.conn.execute("SELECT hotel_id, name, number_of_stars, city_name, room_number, price_per_night FROM hotel natural join room WHERE price_per_night < (SELECT avg(price_per_night) as avgPrice FROM room)")
     data = []
+    data1 = []
     for row in result:
       data.append(row)
-
+    for row in rec:
+      data1.append(row)
     context = dict(data = data)
-    return render_template("pastbooking.html",**context) 
+    context1 = dict(data2= data2)
+    return render_template("pastbooking.html",**context,**context1) 
 
     
 @app.route('/register')
@@ -113,6 +126,7 @@ def addbooking():
   checkout = request.form['check-out']
   id = request.form['id']
   g.conn.execute('INSERT INTO booking VALUES (%d,%d-%m-%Y,%d-%m-%Y,%s)',room,checkin,checkout,id)
+  g.conn.execute('INSERT INTO timeslot VALUEUS (%d-%m-%Y,%d-%m-%Y)',checkin,checkout)
   return "Booking Complete"
 
 @app.route('/addcompanion', methods=['POST'])

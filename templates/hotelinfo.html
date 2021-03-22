@@ -32,8 +32,34 @@
   {% endfor %}
 </p> 
 
+  <h4> Total Transportation Service </h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"> FROM </th>
+      <th scope="col"> PRICE </th>
+      <th scope="col"> TO </th>
+      <th scope="col"> PRICE</th>
+      <th scope="col"> TRANSPORATION</th>
+      <th scope="col"> TRAN PRICE</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for n in data3 %}
+  <tr>
+  <td> {{n[2]}}</td> 
+  <td> (${{n[3]}}) </td>
+  <td> {{n[0]}} </td>
+  <td> (${{n[1]}}) </td> 
+  <td> {{n[4]}} </td>
+  <td> (${{n[5]}}) </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
 
+  <h3> Visit Other Places </h3> 
 {% block footer %}
   {{super()}}
 {% endblock %}

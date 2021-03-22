@@ -20,6 +20,17 @@
   {% endfor %}
   </p>
 
+  <h5> Unavailable Dates </h5>
+  {% for n in data2 %}
+  <div>
+  Room Number : {{n[0]}} <br>
+  Check-in Date : {{n[1]}} <br>
+  Check-out Date: {{n[2]}} <br>
+  </div>
+  <br>
+  {% endfor %}
+  </p>
+ 
   <h3> Enter Your Information </h3>
   <p>  
   <form method = "POST" action="/addbooking">
@@ -34,7 +45,7 @@
   <h5> Enter Travel Companion's Information (optional) </h5>
   <p>
   <form method = "POST" action="/addcompanion">
-    companion id(GUESTXXX): <input type = "text" name = "id"> <br>
+    companion id : <input type = "text" name = "id"> <br>
     relationship : <input type = "text" name = "relation"> <br>
     year of birth: <input type = "text" name = "yob"> <br>
     name: <input type = "text" name ="name"> <br>
