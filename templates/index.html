@@ -23,16 +23,25 @@
 
   {% block content %}
     <form method="POST" action={{url_for('hotelinfo')}}>
-      <p>Which city are you travelling to? <br> <input type="text" name="city">
-      <div class = "form-group">
-        <p><button type="submit" class="btn btn-primary">Search</button></p>
-      </div>      
-     </p>
+      <p>
+      <label for="city">Which city are you travelling to?</label>
+      <select name="city" id="city">
+	<option hidden selected> Select </option>
+        <option value="New York">New York</option>
+        <option value="Laguna Beach">Laguna Beach</option>
+        <option value="Bryan">Bryan</option>
+	<option value="San Luis Obispo">San Luis Obispo</option>
+	<option value="Dana Point">Dana Point</option>
+	<option value="The Woodlands">The Woodlands</option>
+	<option value="Orlando">Orlando</option>
+	<option value="Kissimmee">Kissimmee</option>
+	<option value="Las Vegas">Las Vegas</option>
+      </select>
+      <br><br>	
+      <button type="submit" class="btn btn-primary">Search</button>
+      </p>
     </form>
-    <p> Options: <br> New York (NY) <br> Laguna Beach (CA) <br> Bryan (TX) <br>
-      San Luis Obispo (CA) <br> Dana Point (CA) <br> The Woodlands (TX) <br> Orlando (FL)
-      <br> Kissimmee (FL) <br> Las Vegas (NV) </p>
-  {% endblock %}
+ {% endblock %}
 
   <div class = "footer">
     {% block footer %}
