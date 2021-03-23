@@ -3,6 +3,7 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
+from sqlalchemy.exc import IntegrityError
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -135,35 +136,44 @@ def register():
 
 @app.route('/add', methods=['POST'])
 def add():
-  id = request.form['id']
-  yob = request.form['year_of_birth']
-  name = request.form['name']
-  email = request.form['email']
-  gender = request.form['gender']
-  g.conn.execute('INSERT INTO customer VALUES (%s,%s,%s,%s,%s)',id,yob,name,email,gender)
-  return render_template("login.html")
-
+  try:
+    id = request.form['id']
+    yob = request.form['year_of_birth']
+    name = request.form['name']
+    email = request.form['email']
+    gender = request.form['gender']
+    g.conn.execute('INSERT INTO customer VALUES (%s,%s,%s,%s,%s)',id,yob,name,email,gender)
+    return render_template("login.html")
+  except IntegrityError:
+    return "ID already Exists!"
+  
 @app.route('/addbooking', methods=['POST'])
 def addbooking():
-  room = request.form['room']
-  checkin = request.form['check-in']
-  checkout = request.form['check-out']
-  id = request.form['id']
-  g.conn.execute('INSERT INTO timeslot VALUES (%s,%s)',checkin,checkout)
-  g.conn.execute('INSERT INTO booking VALUES (%s,%s,%s,%s)',room,checkin,checkout,id)
-  return "Booking Complete"
+  try:
+    room = request.form['room']
+    checkin = request.form['check-in']
+    checkout = request.form['check-out']
+    id = request.form['id']
+    g.conn.execute('INSERT INTO timeslot VALUES (%s,%s)',checkin,checkout)
+    g.conn.execute('INSERT INTO booking VALUES (%s,%s,%s,%s)',room,checkin,checkout,id)
+    return "Booking Complete"
+  except IntegrityError:
+    return "Sorry, the room was already booked"
+
 
 @app.route('/addcompanion', methods=['POST'])
 def addcompanion():
-  id = request.form['id']
-  relation = request.form['relation']
-  yob = request.form['yob']
-  name = request.form['name']
-  gender = request.form['gender']
-  cust_id = request.form['cust_id']
-  g.conn.execute('INSERT INTO travelcompanion VALUES (%s,%s,%s,%s,%s,%s)',id,relation,yob,name,gender,cust_id)
-  return "Added to Guest List"
-
+  try:
+    id = request.form['id']
+    relation = request.form['relation']
+    yob = request.form['yob']
+    name = request.form['name']
+    gender = request.form['gender']
+    cust_id = request.form['cust_id']
+    g.conn.execute('INSERT INTO travelcompanion VALUES (%s,%s,%s,%s,%s,%s)',id,relation,yob,name,gender,cust_id)
+    return "Added to Guest List"
+  except IntegrityError:
+   return "Please check inserted information are all valid"
 if __name__ == "__main__":
   import click
 
