@@ -5,7 +5,7 @@ Jain Ryu (jr3990)
 
 PostgreSQL account: jr3990
 
-URL:
+URL: http://35.243.201.36:8111/
 
 
 <DESCRIPTION OF OUR APPLICATION>
