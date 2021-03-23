@@ -49,18 +49,25 @@ def hotelinfo():
   if request.method == 'POST':
     city = request.form["city"]
     result = g.conn.execute("SELECT * FROM hotel WHERE city_name = %s",city)
-    tour = g.conn.execute("SELECT name, price FROM touristattraction WHERE city_name = %s",city)
-    trans = g.conn.execute("SELECT K.destination, K.destprice, K.start,K.startprice, T.type,T.price FROM (SELECT A.id as destid, A.name as destination, A.price as destprice,B.id as startid,B.name as start,B.price as startprice FROM touristattraction A CROSS JOIN touristattraction B) K JOIN transportation T ON (T.to_ID=K.destid AND T.from_ID=K.startid)")  
-    data= []
-    data2 = []
-    data3 = []
-
+    data=[]
     for row in result:
       data.append(row)
+    result.close()
+ 
+    tour = g.conn.execute("SELECT name, price FROM touristattraction WHERE city_name = %s",city)
+    data2=[]
     for row in tour:
       data2.append(row)
+    tour.close()
+
+
+    trans = g.conn.execute("""SELECT K.destination, K.destprice, K.start,K.startprice, T.type,T.price
+     FROM (SELECT A.id as destid, A.name as destination, A.price as destprice,B.id as startid,B.name as start,B.price as startprice 
+     FROM touristattraction A CROSS JOIN touristattraction B) K JOIN transportation T ON (T.to_ID=K.destid AND T.from_ID=K.startid)""")  
+    data3=[]
     for row in trans:
-      data3.append(row)
+      data3.append(row)    
+    trans.close()
 
     context = dict(data = data)
     context2 = dict(data2= data2)
@@ -72,17 +79,21 @@ def book():
   if request.method == 'POST':
      hotel = request.form["hotel"]
      result = g.conn.execute("SELECT room_number, size, price_per_night FROM room WHERE hotel_id = %s",hotel)
-     booked = g.conn.execute("SELECT room_number, check_in_date,check_out_date FROM room NATURAL JOIN booking WHERE hotel_id = %s",hotel)
      data = []
-     data2 = []
      for row in result:
        data.append(row)
+     result.close()
+
+     booked = g.conn.execute("SELECT room_number, check_in_date,check_out_date FROM room NATURAL JOIN booking WHERE hotel_id = %s",hotel)
+     data2 = []
      for row in booked:
        data2.append(row)
+     booked.close()
+
      context = dict(data = data)
      context2 = dict(data2=data2)
      return render_template("book.html", **context,**context2)
-
+   
 @app.route('/login')
 def login():
   return render_template("login.html")
@@ -95,6 +106,10 @@ def pastbooking():
     result = g.conn.execute("""SELECT city_name, hotel.name, room_number, check_in_date, check_out_date
     FROM (booking NATURAL JOIN room) K JOIN hotel USING (hotel_id) 
     WHERE cust_id = %s""", id)
+    data = []
+    for row in result:
+      data.append(row)
+    result.close()
 
     rec = g.conn.execute("""SELECT name, city_name, number_of_stars
     FROM hotel
@@ -102,13 +117,11 @@ def pastbooking():
     (SELECT DISTINCT(number_of_stars)
     FROM (booking NATURAL JOIN room) JOIN hotel USING (hotel_id)
     WHERE cust_id = %s)""",id)
-
-    data = []
     data2 = []
-    for row in result:
-      data.append(row)
     for row in rec:
-      data2.append(row)
+      data2.append(row) 
+    rec.close()
+
     context = dict(data = data)
     context1 = dict(data2= data2)
 
@@ -136,8 +149,8 @@ def addbooking():
   checkin = request.form['check-in']
   checkout = request.form['check-out']
   id = request.form['id']
-  g.conn.execute('INSERT INTO booking VALUES (%d,%d-%m-%Y,%d-%m-%Y,%s)',room,checkin,checkout,id)
-  g.conn.execute('INSERT INTO timeslot VALUEUS (%d-%m-%Y,%d-%m-%Y)',checkin,checkout)
+  g.conn.execute('INSERT INTO timeslot VALUES (%s,%s)',checkin,checkout)
+  g.conn.execute('INSERT INTO booking VALUES (%s,%s,%s,%s)',room,checkin,checkout,id)
   return "Booking Complete"
 
 @app.route('/addcompanion', methods=['POST'])
@@ -148,7 +161,7 @@ def addcompanion():
   name = request.form['name']
   gender = request.form['gender']
   cust_id = request.form['cust_id']
-  g.conn.execute('INSERT INTO travelcompanion VALUES (%d,%s,%d,%s,%s,%s)',id,relation,yob,name,gender,cust_id)
+  g.conn.execute('INSERT INTO travelcompanion VALUES (%s,%s,%s,%s,%s,%s)',id,relation,yob,name,gender,cust_id)
   return "Added to Guest List"
 
 if __name__ == "__main__":
