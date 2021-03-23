@@ -41,12 +41,18 @@ When the registered users enter their customer id, it returns information about 
 It moreover provides a recommendation of hotels which have the same number of stars as those that users have booked before.
 
 Interesting Database Operations:
-1) Booking Process
-When the user clicks a button on hotelinfo.html, the selected hotel's id is passed to booking page.
-Then, it accesses "room" table to list all the rooms in that hotel.
-Moreover, to avoid more than one booking in one room, we accessed booking and room tables to retrieve unavailable dates.
+1) database queries on hotelinfo page
+hotelinformation page not only shows a list of hotels but also help users to easily plan their travels by providing information about things to do in the city.
+When the user selects the city, the page returns a list of hotels (which is also linked to its individual page) located in the city.
+Moreover, using the "city_name" as in input, it also returns a list of tourist attractions in the city.
+Lastly, there is a table which provides information about how users can move from one tourist attraction to another, although this is not specific to the city they chose.
+
+The fact that these bunch of information is based on a single input was interesting.
+Furthermore, this resembles many of the real-world hotel booking applications which provide many other information related to travel experience besides hotel information itself.
 
 2) Hotel Recommendation
+pastbooking page is to help users to find appropriate hotels for future travels based on their memories of past reservations.
+Underneath the list of past bookings, there is a recommendation specific to individual user.
 user's customer id is passed as an input to booking, room, hotel tables to find booked hotels' number of stars.
 Then using a list of number of stars as an input, it retrieves all hotels with the same number of stars.
 I thought this was interesting, since it is a simplified version of how real-world recommendation algorithm works. It looks at the past activities and predicts/recommends choices to be made in the future.
