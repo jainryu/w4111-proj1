@@ -18,12 +18,18 @@
   </divi>
 </p>
 
-RECOMMENDATIONS (SPECIAL PRICE)
 <p>
-<div>
+RECOMMENDATIONS FOR YOU
   {% for n in data2 %}
-    {{n[0]}} {{n[1]}} {{n[2]}} {{n[3]}} {{n[4]}} {{n[5]}}
+  <div>
+  <ul>
+    <li>
+    {{n[0]}} (City: {{n[1]}}  Number of Stars: {{n[2]}})
+    </li>
+  </ul>
+  </divi>
   {% endfor %}
+</p>
 {% endblock %}
 
 {% block footer %}

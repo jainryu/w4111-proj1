@@ -91,16 +91,27 @@ def login():
 def pastbooking():
   if request.method == 'POST':
     id = request.form["id"]
-    result = g.conn.execute("SELECT city_name, hotel.name, room_number, check_in_date, check_out_date FROM (booking NATURAL JOIN room) JOIN hotel USING (hotel_id) WHERE cust_id = %s", id)
-    rec = g.conn.execute("SELECT hotel_id, name, number_of_stars, city_name, room_number, price_per_night FROM hotel natural join room WHERE price_per_night < (SELECT avg(price_per_night) as avgPrice FROM room)")
+ 
+    result = g.conn.execute("""SELECT city_name, hotel.name, room_number, check_in_date, check_out_date
+    FROM (booking NATURAL JOIN room) K JOIN hotel USING (hotel_id) 
+    WHERE cust_id = %s""", id)
+
+    rec = g.conn.execute("""SELECT name, city_name, number_of_stars
+    FROM hotel
+    WHERE number_of_stars IN
+    (SELECT DISTINCT(number_of_stars)
+    FROM (booking NATURAL JOIN room) JOIN hotel USING (hotel_id)
+    WHERE cust_id = %s)""",id)
+
     data = []
-    data1 = []
+    data2 = []
     for row in result:
       data.append(row)
     for row in rec:
-      data1.append(row)
+      data2.append(row)
     context = dict(data = data)
     context1 = dict(data2= data2)
+
     return render_template("pastbooking.html",**context,**context1) 
 
     
