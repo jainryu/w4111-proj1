@@ -154,7 +154,6 @@ def addbooking():
     checkin = request.form['check-in']
     checkout = request.form['check-out']
     id = request.form['id']
-    g.conn.execute('INSERT INTO timeslot VALUES (%s,%s)',checkin,checkout)
     g.conn.execute('INSERT INTO booking VALUES (%s,%s,%s,%s)',room,checkin,checkout,id)
     return "Booking Complete"
   except IntegrityError:
